@@ -2,7 +2,7 @@ import { Alert } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { LoginForm, ProFormText } from "@ant-design/pro-components";
 
-import { useSignIn } from "@/hooks/services/sign";
+import { useSignIn } from "@/services/hooks/sign";
 
 const LoginMessage: React.FC<{ content: string }> = ({ content }) => {
   return (

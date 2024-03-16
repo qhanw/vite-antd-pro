@@ -7,10 +7,10 @@ import {
 } from "@ant-design/icons";
 import { PageContainer, ProCard, ProLayout } from "@ant-design/pro-components";
 
-import defaultProps from "../site.cfg";
+import defaultProps from "../../config/site.cfg";
 
 import { useUserInfo } from "@/utils/store";
-import { useSignOut } from "@/hooks/services/sign";
+import { useSignOut } from "@/services/hooks/sign";
 
 export default () => {
   const [initPathname] = useState("/");
