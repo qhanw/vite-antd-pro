@@ -3,14 +3,33 @@ import { Outlet, Link, useNavigate } from "react-router-dom";
 import {
   InfoCircleFilled,
   QuestionCircleFilled,
-  LoginOutlined,
+  LogoutOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
+
+import { Input, Dropdown, theme } from "antd";
 import { PageContainer, ProCard, ProLayout } from "@ant-design/pro-components";
 
-import defaultProps from "../../config/site.cfg";
+import defaultProps from "@/../config/site.cfg";
 
 import { useUserInfo } from "@/utils/store";
 import { useSignOut } from "@/services/hooks/sign";
+
+const SearchInput = () => {
+  const { token } = theme.useToken();
+  return (
+    <Input
+      style={{
+        borderRadius: 4,
+        marginInlineEnd: 12,
+        backgroundColor: token.colorBgTextHover,
+      }}
+      prefix={<SearchOutlined style={{ color: token.colorTextLightSolid }} />}
+      placeholder="搜索方案"
+      variant="borderless"
+    />
+  );
+};
 
 export default () => {
   const [initPathname] = useState("/");
@@ -27,6 +46,7 @@ export default () => {
 
   return (
     <ProLayout
+      layout="mix"
       siderWidth={216}
       bgLayoutImgList={[
         {
@@ -49,20 +69,38 @@ export default () => {
         },
       ]}
       {...defaultProps}
-      location={{
-        pathname,
-      }}
+      location={{ pathname }}
       avatarProps={{
         src: "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
-        title: info?.username?.toUpperCase(),
         size: "small",
+        title: "七妮妮",
+        render: (_, dom) => {
+          return (
+            <Dropdown
+              menu={{
+                items: [
+                  {
+                    key: "logout",
+                    icon: <LogoutOutlined />,
+                    label: "退出登录",
+                    onClick: signOut,
+                  },
+                ],
+              }}
+            >
+              {dom}
+            </Dropdown>
+          );
+        },
       }}
       actionsRender={(props) => {
         if (props.isMobile) return [];
         return [
+          props.layout !== "side" && document.body.clientWidth > 1400 ? (
+            <SearchInput />
+          ) : undefined,
           <InfoCircleFilled key="InfoCircleFilled" />,
           <QuestionCircleFilled key="QuestionCircleFilled" />,
-          <LoginOutlined key="LoginOutlined" onClick={() => signOut()} />,
         ];
       }}
       menuItemRender={(item, dom) => (

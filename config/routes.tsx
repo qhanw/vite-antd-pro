@@ -123,21 +123,28 @@ const base = [
   { path: "*", component: "./not-found" },
 ];
 
+// 动态路由配置
+const pages = import.meta.glob("/src/{pages,layouts}/**/*");
+const dynamicImport = Object.entries(pages).reduce(
+  (prev, [key, val]) => ({
+    ...prev,
+    [key.replace(/(\/index)?\.tsx$/, "")]: val,
+  }),
+  {} as any
+);
+
 const genRoutes = function f(r: any): any {
-  return r.map(({ index, path, layout, component, routes }: any) => ({
-    ...(index ? { index } : { path }),
+  return r.map(({ index, path, layout, component, routes }: any) => {
+    const replacer = `/src/${layout ? "" : "pages/"}`;
+    const page = dynamicImport[(layout ?? component)?.replace("./", replacer)];
 
-    element: lazyLoad(
-      () =>
-        import(
-          layout
-            ? `../src${layout.replace(".", "")}`
-            : `../src/pages${component.replace(".", "")}`
-        )
-    ),
+    return {
+      ...(index ? { index } : { path }),
+      element: lazyLoad(page ?? dynamicImport["/src/pages/not-found"]),
 
-    ...(routes ? { children: f(routes) } : {}),
-  }));
+      ...(routes ? { children: f(routes) } : {}),
+    };
+  });
 };
 
 const genMenus = function f(r: any): any {

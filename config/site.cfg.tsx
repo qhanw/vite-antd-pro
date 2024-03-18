@@ -2,10 +2,8 @@ import { ProLayoutProps } from "@ant-design/pro-components";
 
 import { menus } from "./routes";
 
-console.log(menus);
-
 const cfg: ProLayoutProps = {
-  title: "Vite Ant Design",
+  title: "Vite Antd Pro",
   route: menus,
   //   route: {
   //     path: "/",

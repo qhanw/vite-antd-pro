@@ -26,7 +26,7 @@ export default () => {
 
   return (
     <LoginForm
-      title="Vite Ant Design"
+      title="Vite Antd Pro"
       subTitle="全球最大的代码托管平台"
       onFinish={async (values) => await onSubmit(values)}
     >
