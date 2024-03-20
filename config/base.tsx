@@ -1,4 +1,4 @@
-import { CrownFilled, SmileFilled } from "@ant-design/icons";
+import { CrownFilled, SmileFilled } from '@ant-design/icons';
 
 export type Route = {
   path?: string;
@@ -12,75 +12,75 @@ export type Route = {
 };
 
 const routes: Route[] = [
-  { path: "/login", component: "./login" },
+  { path: '/login', component: './login' },
   {
-    path: "/",
-    layout: "./layouts/BaseLayout",
+    path: '/',
+    layout: './layouts/BaseLayout',
     routes: [
       {
         index: true,
-        path: "/welcome",
-        name: "欢迎",
+        path: '/welcome',
+        name: '欢迎',
         icon: <SmileFilled />,
-        component: "./welcome",
+        component: './welcome',
       },
       {
-        path: "dashboard",
-        component: "./dashboard",
-        name: "dashboard",
+        path: 'dashboard',
+        component: './dashboard',
+        name: 'dashboard',
         icon: <SmileFilled />,
         routes: [
           {
-            path: "d1",
-            component: "./dashboard/D1",
-            name: "D1",
+            path: 'd1',
+            component: './dashboard/D1',
+            name: 'D1',
             icon: <SmileFilled />,
           },
           {
-            path: "d2",
-            component: "./dashboard/D2",
-            name: "D2",
+            path: 'd2',
+            component: './dashboard/D2',
+            name: 'D2',
             icon: <SmileFilled />,
           },
         ],
       },
       {
-        path: "/system",
-        name: "系统管理",
+        path: '/system',
+        name: '系统管理',
         icon: <CrownFilled />,
         routes: [
           {
-            path: "/system/admin",
-            name: "管理员",
+            path: '/system/admin',
+            name: '管理员',
             icon: <CrownFilled />,
-            component: "./system/admin",
+            component: './system/admin',
           },
           {
-            path: "roles",
-            name: "角色管理",
+            path: 'roles',
+            name: '角色管理',
             icon: <CrownFilled />,
-            component: "./system/roles",
+            component: './system/roles',
           },
           {
-            path: "menus",
-            name: "菜单管理",
+            path: 'menus',
+            name: '菜单管理',
             icon: <CrownFilled />,
-            component: "./system/menus",
+            component: './system/menus',
           },
           {
-            path: "logs",
-            name: "操作日志",
+            path: 'logs',
+            name: '操作日志',
             icon: <CrownFilled />,
-            component: "./system/Logs",
+            component: './system/Logs',
           },
-          { path: "*", component: "./not-found" },
+          { path: '*', component: './not-found' },
         ],
       },
-      { path: "*", component: "./not-found" },
+      { path: '*', component: './not-found' },
     ],
   },
 
-  { path: "*", component: "./not-found" },
+  { path: '*', component: './not-found' },
 ];
 
 export default routes;

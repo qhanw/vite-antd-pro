@@ -1,16 +1,15 @@
-import request from "@/utils/request";
+import request from '@/utils/request';
 
-export type UserInfo = API.Res<{
-    id: string
-    role_id: string
-    username: string
-    is_disable: boolean
-    passwd: string
-    update_time: string
-    create_time: string
-}>
+export type UserInfo = {
+  id: string;
+  name: string;
+  roleId: string;
+  enable: boolean;
+  password: string;
+  updateTime: string;
+  createTime: string;
+};
 
 export async function fetchUserInfo() {
-    return request<UserInfo>('/api/sys/admin/self')
+  return request<UserInfo>('/api/sys/admin/self');
 }
-
