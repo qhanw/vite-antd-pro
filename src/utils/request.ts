@@ -1,11 +1,11 @@
-import axios from 'axios';
-import { AxiosRequestConfig } from 'axios'
-// import { notification } from 'antd';
-import store from '@/utils/store';
-
+import axios from "axios";
+import { AxiosRequestConfig } from "axios";
+import { message } from "antd";
+import store from "@/utils/store";
 
 
 const instance = axios.create({
+    // baseURL: 'http://10.80.10.95:9001',
     timeout: 1000,
 });
 
@@ -75,22 +75,43 @@ const instance = axios.create({
 // };
 
 
-export default async function <T>(url: string, options?: AxiosRequestConfig): Promise<T | undefined> {
+type Res<U = any> = { data?: U, code?: number, msg?: string }
 
+export default async function <T>(
+    url: string,
+    options?: AxiosRequestConfig
+): Promise<T | undefined> {
+
+    const token = store.get("token");
     // 配置请求参数等信息
-    const result = await instance<T>({ url, ...options, headers: { ...options?.headers, Authorization: `Bearer ${store.get('token')}` } });
-
+    const result = await instance<Res<T>>({
+        url,
+        headers: {
+            ...options?.headers,
+            Authorization: `Bearer ${token}`,
+        },
+        ...options,
+    });
 
     // success
     // config data headers request status statusText
     //
-    //
-    console.log(result)
-    if (result.status === 200) return result.data;
 
+    console.log(result);
+
+    if (result.status === 200) {
+        const model = result.data;
+        if (model.code === 200) return model.data;
+
+        // TODO: 后台程序错误处理
+        // Details: JSON.stringify(model)
+        message.error(model.msg)
+        return Promise.reject(new Error('系统错误'));
+
+    }
+
+    // TODO: HTTP 错误配置
     // http status handle
 
-    return
-
+    return Promise.reject(new Error("系统错误"));
 }
-

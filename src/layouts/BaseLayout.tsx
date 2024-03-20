@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from "react";
-import { Outlet, Link, useNavigate } from "react-router-dom";
+import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 import {
   InfoCircleFilled,
   QuestionCircleFilled,
@@ -8,7 +8,7 @@ import {
 } from "@ant-design/icons";
 
 import { Input, Dropdown, theme } from "antd";
-import { PageContainer, ProCard, ProLayout } from "@ant-design/pro-components";
+import { ProLayout } from "@ant-design/pro-components";
 
 import defaultProps from "@/../config/site.cfg";
 
@@ -31,10 +31,11 @@ const SearchInput = () => {
   );
 };
 
-export default () => {
-  const [initPathname] = useState("/");
-  const [pathname, setPathname] = useState(initPathname);
+export default function BaseLayout() {
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const [pathname, setPathname] = useState(location.pathname || "/");
 
   const { data: info } = useUserInfo();
 
@@ -73,7 +74,7 @@ export default () => {
       avatarProps={{
         src: "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
         size: "small",
-        title: "七妮妮",
+        title: info?.username?.toUpperCase(),
         render: (_, dom) => {
           return (
             <Dropdown
@@ -106,17 +107,13 @@ export default () => {
       menuItemRender={(item, dom) => (
         <Link
           to={item.path!}
-          onClick={() => setPathname(item.path || initPathname)}
+          onClick={() => setPathname(item.path || pathname)}
         >
           {dom}
         </Link>
       )}
     >
-      <PageContainer>
-        <ProCard style={{ height: "100vh", minHeight: 800 }}>
-          <Outlet />
-        </ProCard>
-      </PageContainer>
+      <Outlet />
     </ProLayout>
   );
-};
+}

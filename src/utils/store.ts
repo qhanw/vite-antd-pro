@@ -22,10 +22,17 @@ export function useToken(init?: string) {
 }
 
 
+
+type UserInfo = {
+    id: string
+    role_id?: string
+    username: string
+    is_disable: boolean
+}
 /** get userinfo */
 export function useUserInfo(init?: any) {
     const TOKEN = 'userinfo'
-    const [data, setData] = useState(store.get(TOKEN))
+    const [data, setData] = useState<UserInfo>(store.get(TOKEN))
     const set = (data: any) => store(TOKEN, data || init)
     const refresh = () => setData(store.get(TOKEN))
 

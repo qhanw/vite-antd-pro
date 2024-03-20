@@ -22,15 +22,13 @@ export default () => {
     await signIn(values);
   };
 
-  const { code } = userLoginState || {};
-
   return (
     <LoginForm
       title="Vite Antd Pro"
       subTitle="全球最大的代码托管平台"
       onFinish={async (values) => await onSubmit(values)}
     >
-      {code !== 200 && (
+      {userLoginState && (
         <LoginMessage content="账户或密码错误(admin/ant.design)" />
       )}
       <ProFormText

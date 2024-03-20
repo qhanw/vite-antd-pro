@@ -21,9 +21,15 @@ declare namespace API {
     };
 
     // common query params
-    type Qs = { current?: number; pageSize?: number; }
+    type Qs = {
+        current?: number; pageSize?: number; sort?: Record<string, 'ascend' | 'descend' | null>
+    }
 
-    // response result
-    type Res<T> = { data?: T, code?: number, msg?: string }
+    // 分页数据类型
+    type ResPagination<T> = { lists: T[], current: number, pageSize: number, total: number }
+
+    type EnumItem = { label: string, value: string | number, [propName: string]: string | number }
+
+    type ResEnum<T = EnumItem[]> = T
 
 }
