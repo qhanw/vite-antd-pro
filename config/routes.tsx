@@ -8,7 +8,14 @@ const lazyLoad = (src: any) => (
 );
 
 // 动态路由配置
-const pages = import.meta.glob('/src/{pages,layouts}/**/*.{ts,tsx,js.jsx}');
+const pages = import.meta.glob([
+  '/src/{pages,layouts}/**/*.{ts,tsx,js,jsx}',
+  '!**/{components,utils,services,auths}',
+  '!**/{utils,util,service,services,auth}.{ts,tsx,js,jsx}',
+  '!**/*.d.ts',
+]);
+
+console.log(pages);
 const dynamicImport = Object.entries(pages).reduce(
   (prev, [key, val]) => ({
     ...prev,
@@ -56,39 +63,3 @@ const genMenus = function f(r: Route[], parent?: Route) {
 export const routes = genRoutes(base);
 
 export const menus = genMenus(base.filter((node) => node.path === '/')).at(-1);
-
-// export const routes = [
-//   {
-//     path: "login",
-//     element: lazyLoad(() => import("../src/pages/login")),
-//   },
-//   {
-//     path: "/",
-//     element: <BasicLayout />, // BasicLayout是基本布局，不必使用懒加载
-//     children: [
-//       {
-//         index: true,
-//         element: lazyLoad(() => import("../src/pages/welcome")),
-//       },
-//       {
-//         path: "dashboard",
-//         element: lazyLoad(() => import("../src/pages/dashboard")),
-//         children: [
-//           {
-//             path: "d1",
-//             element: lazyLoad(() => import("../src/pages/dashboard/D1")),
-//           },
-//           {
-//             path: "d2",
-//             element: lazyLoad(() => import("../src/pages/dashboard/D2")),
-//           },
-//         ],
-//       },
-
-//       {
-//         path: "*",
-//         element: lazyLoad(() => import("../src/pages/not-found")),
-//       },
-//     ],
-//   },
-// ];
