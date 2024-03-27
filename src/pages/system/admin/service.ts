@@ -6,7 +6,7 @@ export async function fetchSysAdmin(params?: QsAdmin) {
 }
 
 export async function fetchRolesEnum() {
-  return request<API.ResEnum>('/api/sys/roleEnum');
+  return request<API.ResEnum>('/api/sys/role/enum');
 }
 
 /** 新增编辑管理员 */
