@@ -10,11 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@ant-design/icons": "^5.3.4",
-    "@ant-design/pro-components": "^2.6.51",
+    "@ant-design/icons": "^5.3.5",
+    "@ant-design/pro-components": "^2.6.52",
     "@emotion/css": "^11.11.2",
     "ahooks": "^3.7.10",
-    "antd": "^5.15.3",
+    "antd": "^5.15.4",
     "axios": "^1.6.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -23,17 +23,17 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.30",
-    "@types/react": "^18.2.67",
+    "@types/react": "^18.2.72",
     "@types/react-dom": "^18.2.22",
-    "@typescript-eslint/eslint-plugin": "^7.3.1",
-    "@typescript-eslint/parser": "^7.3.1",
+    "@typescript-eslint/eslint-plugin": "^7.4.0",
+    "@typescript-eslint/parser": "^7.4.0",
     "@vitejs/plugin-react-swc": "^3.6.0",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
     "prettier": "^3.2.5",
-    "typescript": "^5.4.2",
-    "vite": "^5.2.0",
+    "typescript": "^5.4.3",
+    "vite": "^5.2.6",
     "vite-plugin-fake-server": "^2.1.1"
   }
 }

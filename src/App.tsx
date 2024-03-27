@@ -1,6 +1,8 @@
-import { useRoutes } from "react-router-dom";
+import { useRoutes } from 'react-router-dom';
 
-import { routes } from "../config/routes";
+import 'antd/dist/reset.css';
+
+import { routes } from '../config/routes';
 
 const App = () => <>{useRoutes(routes)}</>;
 

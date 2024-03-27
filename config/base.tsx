@@ -62,10 +62,10 @@ const routes: Route[] = [
             component: './system/roles',
           },
           {
-            path: 'menus',
+            path: 'menu',
             name: '菜单管理',
             icon: <CrownFilled />,
-            component: './system/menus',
+            component: './system/menu',
           },
           {
             path: 'logs',

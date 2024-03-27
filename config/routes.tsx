@@ -1,22 +1,20 @@
-import React, { Suspense, lazy } from "react";
-import { Spin } from "antd";
-import base, { Route } from "./base";
-import { Outlet } from "react-router-dom";
+import React, { Suspense, lazy } from 'react';
+import { Spin } from 'antd';
+import base, { Route } from './base';
+import { Outlet } from 'react-router-dom';
 
 const lazyLoad = (src: any) => (
-  <Suspense fallback={<Spin spinning />}>
-    {React.createElement(lazy(src))}
-  </Suspense>
+  <Suspense fallback={<Spin spinning />}>{React.createElement(lazy(src))}</Suspense>
 );
 
 // 动态路由配置
-const pages = import.meta.glob("/src/{pages,layouts}/**/*");
+const pages = import.meta.glob('/src/{pages,layouts}/**/*.{ts,tsx,js.jsx}');
 const dynamicImport = Object.entries(pages).reduce(
   (prev, [key, val]) => ({
     ...prev,
-    [key.replace(/(\/index)?\.tsx$/, "")]: val,
+    [key.replace(/(\/index)?\.tsx$/, '')]: val,
   }),
-  {} as any
+  {} as any,
 );
 
 const genRoutes = function f(r: Route[]): any {
@@ -26,8 +24,8 @@ const genRoutes = function f(r: Route[]): any {
 
     let page;
     if (!isEmptyContainer) {
-      const replacer = `/src/${layout ? "" : "pages/"}`;
-      page = dynamicImport[(layout ?? component)!.replace("./", replacer)];
+      const replacer = `/src/${layout ? '' : 'pages/'}`;
+      page = dynamicImport[(layout ?? component)!.replace('./', replacer)];
     }
 
     return {
@@ -35,7 +33,7 @@ const genRoutes = function f(r: Route[]): any {
       element: isEmptyContainer ? (
         <Outlet />
       ) : (
-        lazyLoad(page ?? dynamicImport["/src/pages/not-found"])
+        lazyLoad(page ?? dynamicImport['/src/pages/not-found'])
       ),
 
       ...(routes ? { children: f(routes) } : {}),
@@ -47,9 +45,9 @@ const genMenus = function f(r: Route[], parent?: Route) {
   return r.reduce((prev, curr) => {
     if (curr.routes) f(curr.routes, curr);
 
-    if (curr.index) curr.path = parent?.path || "/";
+    if (curr.index) curr.path = parent?.path || '/';
 
-    if (curr.path !== "*") prev.push(curr);
+    if (curr.path !== '*') prev.push(curr);
 
     return prev;
   }, [] as Route[]);
@@ -57,7 +55,7 @@ const genMenus = function f(r: Route[], parent?: Route) {
 
 export const routes = genRoutes(base);
 
-export const menus = genMenus(base.filter((node) => node.path === "/")).at(-1);
+export const menus = genMenus(base.filter((node) => node.path === '/')).at(-1);
 
 // export const routes = [
 //   {

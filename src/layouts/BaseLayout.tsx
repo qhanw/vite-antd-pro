@@ -72,7 +72,8 @@ export default function BaseLayout() {
       {...defaultProps}
       location={{ pathname }}
       avatarProps={{
-        src: 'https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg',
+        // src: '',
+        icon: '涵',
         size: 'small',
         title: info?.name?.toUpperCase(),
         render: (_, dom) => {
@@ -80,12 +81,7 @@ export default function BaseLayout() {
             <Dropdown
               menu={{
                 items: [
-                  {
-                    key: 'logout',
-                    icon: <LogoutOutlined />,
-                    label: '退出登录',
-                    onClick: signOut,
-                  },
+                  { key: 'logout', icon: <LogoutOutlined />, label: '退出登录', onClick: signOut },
                 ],
               }}
             >
