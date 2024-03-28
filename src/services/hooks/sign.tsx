@@ -1,15 +1,13 @@
-import { useState } from "react";
-import { message } from "antd";
-import { useNavigate } from "react-router-dom";
-import { signIn, signOut, SignIn } from "@/services/sign";
-import { fetchUserInfo } from "@/services/users";
+import { useState } from 'react';
+import { message } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { signIn, signOut, SignIn } from '@/services/sign';
 
-import store, { useToken, useUserInfo } from "@/utils/store";
+import store, { useToken } from '@/utils/store';
 
 /** user login */
 export const useSignIn = () => {
   const { set: setToken } = useToken();
-  const { set: setUserInfo } = useUserInfo();
 
   const navigate = useNavigate();
 
@@ -26,20 +24,14 @@ export const useSignIn = () => {
       // 本地缓存 token
       setToken(token);
 
-      const info = await fetchUserInfo();
-
-      if (!info) return;
-
-      setUserInfo(info);
-
       // 跳转到主页
       const urlParams = new URL(window.location.href).searchParams;
-      navigate(urlParams.get("redirect") || "/");
+      navigate(urlParams.get('redirect') || '/');
     } catch (error) {
       setUserLoginState(values);
 
       message.destroy();
-      message.error("登录失败，请重试！");
+      message.error('登录失败，请重试！');
 
       console.error(error);
     }
@@ -55,17 +47,17 @@ export const useSignOut = () => {
   const loginOut = async () => {
     try {
       await signOut();
-      message.success("操作成功！");
+      message.success('操作成功！');
       // clean storage
       store.clearAll();
 
       const urlParams = new URL(window.location.href).searchParams;
 
-      navigate(urlParams.get("redirect") || "/login");
+      navigate(urlParams.get('redirect') || '/login');
       return;
     } catch (error) {
       console.error(error);
-      message.error("退出失败，请重试！");
+      message.error('退出失败，请重试！');
     }
   };
 

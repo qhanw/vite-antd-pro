@@ -34,3 +34,13 @@ export function useUserInfo(init?: any) {
 
   return { data, set, refresh };
 }
+
+/** get auth keys */
+export function useAuthKeys(init?: string[]) {
+  const TOKEN = 'auth_keys';
+  const [data, setData] = useState<string[]>(store.get(TOKEN));
+  const set = (data?: string[]) => store(TOKEN, data || init);
+  const refresh = () => setData(store.get(TOKEN));
+
+  return { data, set, refresh };
+}

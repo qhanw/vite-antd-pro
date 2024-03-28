@@ -1,5 +1,5 @@
-import { useLayoutEffect, useState } from 'react';
-import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { Outlet, Link, useLocation } from 'react-router-dom';
 import {
   InfoCircleFilled,
   QuestionCircleFilled,
@@ -8,12 +8,13 @@ import {
 } from '@ant-design/icons';
 
 import { Input, Dropdown, theme } from 'antd';
-import { ProLayout } from '@ant-design/pro-components';
+import { PageLoading, ProLayout } from '@ant-design/pro-components';
 
 import defaultProps from '@/../config/site.cfg';
 
-import { useUserInfo } from '@/utils/store';
+import { useToken } from '@/utils/store';
 import { useSignOut } from '@/services/hooks/sign';
+import { useInitUserInfo } from '@/services/hooks/users';
 
 const SearchInput = () => {
   const { token } = theme.useToken();
@@ -33,17 +34,15 @@ const SearchInput = () => {
 
 export default function BaseLayout() {
   const location = useLocation();
-  const navigate = useNavigate();
-
-  const [pathname, setPathname] = useState(location.pathname || '/');
-
-  const { data: info } = useUserInfo();
 
   const signOut = useSignOut();
 
-  useLayoutEffect(() => {
-    if (!info?.id) navigate('/login');
-  }, [info]);
+  const [pathname, setPathname] = useState(location.pathname || '/');
+
+  const { data: token } = useToken();
+  const { loading, data: info } = useInitUserInfo(token);
+
+  if (loading) return <PageLoading />;
 
   return (
     <ProLayout

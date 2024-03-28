@@ -10,6 +10,12 @@ export type UserInfo = {
   createTime: string;
 };
 
-export async function fetchUserInfo() {
+/** 获取用户信息 */
+export async function queryUserInfo() {
   return request<UserInfo>('/api/sys/admin/self');
+}
+
+/** 获取用户授权 */
+export async function queryUserAuth() {
+  return request<string[]>('/api/sys/admin/auth');
 }
