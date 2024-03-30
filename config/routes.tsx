@@ -15,7 +15,6 @@ const pages = import.meta.glob([
   '!**/*.d.ts',
 ]);
 
-console.log(pages);
 const dynamicImport = Object.entries(pages).reduce(
   (prev, [key, val]) => ({
     ...prev,
@@ -25,14 +24,14 @@ const dynamicImport = Object.entries(pages).reduce(
 );
 
 const genRoutes = function f(r: Route[]): any {
-  return r.map(({ index, path, layout, component, routes }) => {
+  return r.map(({ index, path, layout, element, children }) => {
     // 如果不存在 layout 和 页面组件，表示当前路由层为无布局容器页
-    const isEmptyContainer = !(layout || component);
+    const isEmptyContainer = !(layout || element);
 
     let page;
     if (!isEmptyContainer) {
       const replacer = `/src/${layout ? '' : 'pages/'}`;
-      page = dynamicImport[(layout ?? component)!.replace('./', replacer)];
+      page = dynamicImport[(layout ?? element)!.replace('./', replacer)];
     }
 
     return {
@@ -43,18 +42,24 @@ const genRoutes = function f(r: Route[]): any {
         lazyLoad(page ?? dynamicImport['/src/pages/not-found'])
       ),
 
-      ...(routes ? { children: f(routes) } : {}),
+      ...(children ? { children: f(children) } : {}),
     };
   });
 };
 
 const genMenus = function f(r: Route[], parent?: Route) {
   return r.reduce((prev, curr) => {
-    if (curr.routes) f(curr.routes, curr);
+    const { index, children, icon, path } = curr;
 
-    if (curr.index) curr.path = parent?.path || '/';
+    if (children) f(children, curr);
 
-    if (curr.path !== '*') prev.push(curr);
+    if (index) curr.path = parent?.path || '/';
+
+    if (icon && typeof icon === 'string') {
+      curr.icon = <span className={`anticon ${icon}`} />;
+    }
+
+    if (path !== '*') prev.push(curr);
 
     return prev;
   }, [] as Route[]);

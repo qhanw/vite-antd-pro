@@ -22,6 +22,7 @@
     "store2": "^2.14.3"
   },
   "devDependencies": {
+    "@iconify-json/heroicons": "^1.1.20",
     "@types/node": "^20.11.30",
     "@types/react": "^18.2.72",
     "@types/react-dom": "^18.2.22",
@@ -33,6 +34,7 @@
     "eslint-plugin-react-refresh": "^0.4.6",
     "prettier": "^3.2.5",
     "typescript": "^5.4.3",
+    "unocss": "^0.58.8",
     "vite": "^5.2.6",
     "vite-plugin-fake-server": "^2.1.1"
   }
