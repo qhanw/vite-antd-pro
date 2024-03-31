@@ -1,3 +1,6 @@
+// explain: https://unocss.dev/guide/extracting#extracting-from-build-tools-pipeline
+// @unocss-include
+
 export type Route = {
   path?: string;
   element?: string;

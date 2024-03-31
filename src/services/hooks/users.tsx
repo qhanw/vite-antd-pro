@@ -11,18 +11,19 @@ export const useInitUserInfo = (token?: string) => {
   const { set: setUserInfo } = useUserInfo();
   const { set: setAuthKeys } = useAuthKeys();
 
+  const navLogin = () => {
+    setLoading(false);
+    navigate('/login');
+  };
+
   const run = useCallback(async () => {
     setLoading(true);
     try {
-      if (!token) return;
+      if (!token) return navLogin();
+
       const [info, authKeys] = await Promise.all([queryUserInfo(), queryUserAuth()]);
 
-      if (!info) {
-        setLoading(false);
-        navigate('/login');
-        return;
-      }
-
+      if (!info) return navLogin();
       // 存储到本地
       setAuthKeys(authKeys);
       setUserInfo(info);
@@ -32,8 +33,7 @@ export const useInitUserInfo = (token?: string) => {
 
       setLoading(false);
     } catch (error) {
-      setLoading(false);
-      navigate('/login');
+      navLogin();
     }
   }, []);
 
