@@ -5,7 +5,7 @@ export type Route = {
   path?: string;
   element?: string;
   name?: string;
-  icon?: any;
+  icon?: React.ReactNode;
   index?: boolean;
   layout?: string;
   access?: string;

@@ -15,7 +15,7 @@ const pages = import.meta.glob([
   '!**/*.d.ts',
 ]);
 
-const dynamicImport = Object.entries(pages).reduce(
+const metaPages = Object.entries(pages).reduce(
   (prev, [key, val]) => ({
     ...prev,
     [key.replace(/(\/index)?\.tsx$/, '')]: val,
@@ -31,16 +31,12 @@ const genRoutes = function f(r: Route[]): any {
     let page;
     if (!isEmptyContainer) {
       const replacer = `/src/${layout ? '' : 'pages/'}`;
-      page = dynamicImport[(layout ?? element)!.replace('./', replacer)];
+      page = metaPages[(layout ?? element)!.replace('./', replacer)];
     }
 
     return {
       ...(index ? { index } : { path }),
-      element: isEmptyContainer ? (
-        <Outlet />
-      ) : (
-        lazyLoad(page ?? dynamicImport['/src/pages/not-found'])
-      ),
+      element: isEmptyContainer ? <Outlet /> : lazyLoad(page ?? metaPages['/src/pages/not-found']),
 
       ...(children ? { children: f(children) } : {}),
     };
