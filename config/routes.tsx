@@ -12,7 +12,7 @@ const pages = import.meta.glob([
   '/src/{pages,layouts}/**/*.{ts,tsx,js,jsx}',
   '!**/{components,utils,services,auths}',
   '!**/{utils,util,service,services,auth}.{ts,tsx,js,jsx}',
-  '!**/*.d.ts',
+  '!**/*.{d.ts,json}',
 ]);
 
 const metaPages = Object.entries(pages).reduce(
