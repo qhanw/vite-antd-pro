@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { Spin } from 'antd';
 import base, { Route } from './base';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Navigate } from 'react-router-dom';
 
 const lazyLoad = (src: any) => (
   <Suspense fallback={<Spin spinning />}>{React.createElement(lazy(src))}</Suspense>
@@ -24,7 +24,7 @@ const metaPages = Object.entries(pages).reduce(
 );
 
 const genRoutes = function f(r: Route[]): any {
-  return r.map(({ index, path, layout, element, children }) => {
+  return r.map(({ index, path, layout, element, children, redirect }) => {
     // 如果不存在 layout 和 页面组件，表示当前路由层为无布局容器页
     const isEmptyContainer = !(layout || element);
 
@@ -35,9 +35,9 @@ const genRoutes = function f(r: Route[]): any {
     }
 
     return {
-      ...(index ? { index } : { path }),
       element: isEmptyContainer ? <Outlet /> : lazyLoad(page ?? metaPages['/src/pages/not-found']),
-
+      ...(index ? { index } : { path }),
+      ...(redirect ? { element: <Navigate to={redirect} replace /> } : {}),
       ...(children ? { children: f(children) } : {}),
     };
   });

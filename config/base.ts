@@ -10,6 +10,8 @@ export type Route = {
   layout?: string;
   access?: string;
   children?: Route[];
+  redirect?: string;
+  hideInMenu?: boolean;
 };
 
 const routes: Route[] = [
@@ -31,6 +33,7 @@ const routes: Route[] = [
         name: 'dashboard',
         icon: 'i-menu:dashboard',
         children: [
+          { path: '/dashboard', redirect: '/dashboard/d1' },
           { path: 'd1', element: './dashboard/D1', name: 'D1' },
           { path: 'd2', element: './dashboard/D2', name: 'D2' },
         ],
