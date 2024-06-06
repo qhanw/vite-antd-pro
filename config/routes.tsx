@@ -3,6 +3,7 @@ import { Spin } from 'antd';
 import { Outlet, Navigate } from 'react-router-dom';
 import base, { Route } from './base';
 import { access } from './access';
+import { getFullPath } from './utils';
 
 const lazyLoad = (src: any) => (
   <Suspense fallback={<Spin spinning />}>{React.createElement(lazy(src))}</Suspense>
@@ -37,8 +38,9 @@ const metaPages = Object.entries(pages).reduce(
  * @param allow 继承父级权限
  * @returns 路由配置
  */
-const genRoutes = function f(r: Route[], allow?: string): any {
-  return r.map(({ index, path, layout, element, children, redirect, access: acc }) => {
+const genRoutes = function f(r: Route[], parent?: Route): any {
+  return r.map((curr) => {
+    const { index, path, layout, element, children, redirect, access: acc } = curr;
     // 如果不存在 layout 和 页面组件，表示当前路由层为无布局容器页
     const isEmptyContainer = !(layout || element);
 
@@ -50,21 +52,29 @@ const genRoutes = function f(r: Route[], allow?: string): any {
 
     const elem = page ?? metaPages[exception[404]];
 
+    // full path
+    // 补全 path 使路由变为绝对地址
+    const fullPath = getFullPath(curr, parent?.path);
+
     return {
       loader: () => {
         // 鉴权权限
-        const p = allow && access[allow]();
-        const c = acc && access[acc]();
+        // 先判断父级权限，现判断子页权限
+
+        const p = parent?.access && access[parent?.access](fullPath);
+        const c = acc && access[acc](fullPath);
         const pass = p ?? c ?? true;
 
-        if (!pass) throw new Response('Not Authorized', { status: 403 });
+        const realPath = path !== '*'; // 是否为真实路由地址
+        if (!pass && realPath) throw new Response('Not Authorized', { status: 403 });
+
         return null;
       },
       errorElement: lazyLoad(metaPages[exception.ErrorBoundary]),
       element: isEmptyContainer ? <Outlet /> : lazyLoad(elem),
       ...(index ? { index } : { path }),
       ...(redirect ? { element: <Navigate to={redirect} replace /> } : {}),
-      ...(children ? { children: f(children, acc) } : {}),
+      ...(children ? { children: f(children, fullPath) } : {}),
     };
   });
 };

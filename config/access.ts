@@ -1,6 +1,6 @@
 import type { Route } from './base';
 
-import { getUserInfo } from '@/utils/store';
+import { getUserInfo, getAuthKeys } from '@/utils/store';
 
 type AuthProvider = {
   canAccess: (route?: Route) => void;
@@ -8,5 +8,18 @@ type AuthProvider = {
 };
 
 export const access: AuthProvider = {
-  canAccess: () => getUserInfo()?.roleId === 'root',
+  canAccess: (route) => {
+    // 如果是超级管理员
+    const isAdmin = getUserInfo()?.roleId === 'root';
+    if (isAdmin) return isAdmin;
+
+    const authKeys = getAuthKeys() as string[];
+
+    // 如果权限权限不存在
+    if (!authKeys?.length || !route?.path) return false;
+
+    const key = route.path.replace(/^\//, '').replace(/\//g, ':').toUpperCase().replace(/-/g, '_');
+
+    return authKeys.includes(key);
+  },
 };

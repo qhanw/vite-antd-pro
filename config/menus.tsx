@@ -1,5 +1,6 @@
 import base, { Route } from './base';
 import { access } from './access';
+import { getFullPath } from './utils';
 
 const genMenus = function f(r: Route[], parent?: Route) {
   return r.reduce((prev, curr) => {
@@ -11,10 +12,21 @@ const genMenus = function f(r: Route[], parent?: Route) {
       curr.icon = <span className={`anticon ${icon}`} />;
     }
 
+    // full path
+    // 补全 path 使路由变为绝对地址
+    const fullPath = getFullPath(curr, parent?.path);
+
     // 权限过滤
-    const pass = curr.access ? access[curr.access](curr) : true;
-    if (pass && path !== '*') {
-      prev.push({ ...curr, ...(children ? { children: f(children, curr) } : {}) });
+    // 如果子页面没有权限配置则继承父级权限
+    const realPath = path !== '*';
+    const acc = fullPath.access || parent?.access;
+    const pass = acc && realPath ? access[acc]?.(fullPath) : true;
+
+    if (pass && realPath) {
+      prev.push({
+        ...fullPath,
+        ...(children ? { children: f(children, { ...fullPath, access: acc }) } : {}),
+      });
     }
 
     return prev;
