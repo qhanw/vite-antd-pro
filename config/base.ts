@@ -23,19 +23,26 @@ const routes: Route[] = [
       {
         index: true,
         path: '/welcome',
-        name: '欢迎',
+        name: 'Welcome',
         icon: 'i-menu:smile',
         element: './welcome',
       },
       {
-        path: 'dashboard',
-        element: './dashboard',
-        name: 'dashboard',
+        path: '/dashboard',
+        name: 'Dashboard',
         icon: 'i-menu:dashboard',
+
         children: [
-          { path: '/dashboard', redirect: '/dashboard/d1' },
-          { path: 'd1', element: './dashboard/D1', name: 'D1' },
-          { path: 'd2', element: './dashboard/D2', name: 'D2' },
+          { path: '/dashboard', redirect: '/dashboard/page-1' },
+          {
+            path: '/dashboard/page-1',
+            name: 'Page 1',
+            element: './dashboard/page-1',
+            access: 'canAccess',
+          },
+          { path: 'page-2', name: 'Page 2', element: './dashboard/page-2', access: 'canAccess' },
+          { path: 'page-3', name: 'Page 3', element: './dashboard/page-3' },
+          { path: '*', element: './exception/404' },
         ],
       },
       {
@@ -47,14 +54,15 @@ const routes: Route[] = [
           { path: 'roles', name: '角色管理', element: './system/roles' },
           { path: 'menu', name: '菜单管理', element: './system/menu' },
           { path: 'logs', name: '操作日志', element: './system/Logs' },
-          { path: '*', element: './not-found' },
+          { path: '*', element: './exception/404' },
         ],
       },
-      { path: '*', element: './not-found' },
+
+      { path: '*', element: './exception/404' },
     ],
   },
 
-  { path: '*', element: './not-found' },
+  { path: '*', element: './exception/404' },
 ];
 
 export default routes;

@@ -11,6 +11,7 @@ import { Input, Dropdown, theme } from 'antd';
 import { PageLoading, ProLayout } from '@ant-design/pro-components';
 
 import defaultProps from '@/../config/site.cfg';
+import { menus } from '@/../config/menus';
 
 import { useToken } from '@/utils/store';
 import { useSignOut } from '@/services/hooks/sign';
@@ -69,6 +70,7 @@ export default function BaseLayout() {
         },
       ]}
       {...defaultProps}
+      route={menus()}
       location={{ pathname }}
       avatarProps={{
         // src: '',

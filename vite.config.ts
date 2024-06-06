@@ -9,5 +9,5 @@ import UnoCSS from 'unocss/vite';
 export default defineConfig({
   plugins: [react(), UnoCSS()],
   resolve: { alias: { '@': path.resolve(__dirname, './src') } },
-  server: { proxy: { '^/api': { target: 'http://10.80.10.95:9001', changeOrigin: true } } },
+  server: { proxy: { '^/api': { target: 'http://10.80.10.18:3000', changeOrigin: true } } },
 });

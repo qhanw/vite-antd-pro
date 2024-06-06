@@ -7,6 +7,7 @@ import store from 'store2';
 export default store;
 
 export const getToken = () => store.get('token');
+export const getUserInfo = () => store.get('userinfo');
 
 /** get token */
 export function useToken(init?: string) {

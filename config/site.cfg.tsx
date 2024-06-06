@@ -1,10 +1,7 @@
 import { ProLayoutProps } from '@ant-design/pro-components';
 
-import { menus } from './routes';
-
 const cfg: ProLayoutProps = {
   title: 'Vite Antd Pro',
-  route: menus,
   location: { pathname: '/' },
   appList: [
     {
