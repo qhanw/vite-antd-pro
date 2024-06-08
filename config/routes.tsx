@@ -1,13 +1,10 @@
-import React, { Suspense, lazy } from 'react';
-import { Spin } from 'antd';
+import React, { lazy } from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
 import base, { Route } from './base';
 import { access } from './access';
 import { getFullPath } from './utils';
 
-const lazyLoad = (src: any) => (
-  <Suspense fallback={<Spin spinning />}>{React.createElement(lazy(src))}</Suspense>
-);
+const lazyLoad = (src: any) => <>{React.createElement(lazy(src))}</>;
 
 // 动态路由配置
 const pages = import.meta.glob([
@@ -57,21 +54,34 @@ const genRoutes = function f(r: Route[], parent?: Route): any {
     const fullPath = getFullPath(curr, parent?.path);
 
     return {
-      loader: () => {
-        // 鉴权权限
-        // 先判断父级权限，现判断子页权限
-
-        const p = parent?.access && access[parent?.access](fullPath);
-        const c = acc && access[acc](fullPath);
-        const pass = p ?? c ?? true;
-
-        const realPath = path !== '*'; // 是否为真实路由地址
-        if (!pass && realPath) throw new Response('Not Authorized', { status: 403 });
-
-        return null;
-      },
       errorElement: lazyLoad(metaPages[exception.ErrorBoundary]),
-      element: isEmptyContainer ? <Outlet /> : lazyLoad(elem),
+
+      ...(isEmptyContainer
+        ? { element: <Outlet /> }
+        : {
+            async lazy() {
+              const { default: Component, loader } = await elem();
+              return {
+                Component,
+                loader: async () => {
+                  // 鉴权权限
+                  // 先判断父级权限，现判断子页权限
+                  const p = parent?.access && access[parent?.access](fullPath);
+                  const c = acc && access[acc](fullPath);
+                  const pass = p ?? c ?? true;
+
+                  const realPath = path !== '*'; // 是否为真实路由地址
+                  if (!pass && realPath) throw new Response('Not Authorized', { status: 403 });
+
+                  // 加载 loader 接口数据
+                  const data = await loader?.();
+
+                  return data ?? null;
+                },
+              };
+            },
+          }),
+
       ...(index ? { index } : { path }),
       ...(redirect ? { element: <Navigate to={redirect} replace /> } : {}),
       ...(children ? { children: f(children, fullPath) } : {}),

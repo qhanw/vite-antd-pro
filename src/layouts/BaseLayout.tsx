@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, useLoaderData, redirect } from 'react-router-dom';
 import {
   InfoCircleFilled,
   QuestionCircleFilled,
@@ -8,14 +8,15 @@ import {
 } from '@ant-design/icons';
 
 import { Input, Dropdown, theme } from 'antd';
-import { PageLoading, ProLayout } from '@ant-design/pro-components';
+import { ProLayout } from '@ant-design/pro-components';
 
 import defaultProps from '@/../config/site.cfg';
 import { menus } from '@/../config/menus';
 
-import { useToken } from '@/utils/store';
+import { getToken } from '@/utils/store';
 import { useSignOut } from '@/services/hooks/sign';
-import { useInitUserInfo } from '@/services/hooks/users';
+
+import { queryUserInfo, queryUserAuth, UserInfo } from '@/services/users';
 
 const SearchInput = () => {
   const { token } = theme.useToken();
@@ -34,16 +35,12 @@ const SearchInput = () => {
 };
 
 export default function BaseLayout() {
-  const location = useLocation();
-
   const signOut = useSignOut();
 
+  const location = useLocation();
+  const { info } = useLoaderData() as { info: UserInfo };
+
   const [pathname, setPathname] = useState(location.pathname || '/');
-
-  const { data: token } = useToken();
-  const { loading, data: info } = useInitUserInfo(token);
-
-  if (loading) return <PageLoading />;
 
   return (
     <ProLayout
@@ -108,4 +105,27 @@ export default function BaseLayout() {
       <Outlet />
     </ProLayout>
   );
+}
+
+export async function loader() {
+  const navLogin = () => redirect('/login');
+  const token = getToken();
+  if (!token) return navLogin();
+
+  try {
+    console.log('Query User Info');
+    const [info, authKeys] = await Promise.all([queryUserInfo(), queryUserAuth()]);
+
+    if (!info) return navLogin();
+    // 存储到本地
+    // setAuthKeys(authKeys);
+    // setUserInfo(info);
+
+    // // 返回用户信息
+    // setData(info);
+
+    return { info, authKeys };
+  } catch (error) {
+    return navLogin();
+  }
 }

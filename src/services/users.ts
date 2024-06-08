@@ -10,6 +10,10 @@ export type UserInfo = {
   createTime: string;
 };
 
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 /** 获取用户信息 */
 export async function queryUserInfo() {
   // return request<UserInfo>('/api/sys/admin/self');
@@ -17,12 +21,14 @@ export async function queryUserInfo() {
   const token = getToken();
   const name = token.replace('token-', '');
 
-  return Promise.resolve({
+  // return Promise.reject('error!!!');
+
+  return sleep(2000).then(() => ({
     id: 1,
     name: name,
     password: 'e10adc3949ba59abbe56e057f20f883e',
     roleId: name,
-  });
+  }));
 }
 
 /** 获取用户授权 */

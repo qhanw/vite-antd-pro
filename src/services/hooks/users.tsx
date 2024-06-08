@@ -21,6 +21,8 @@ export const useInitUserInfo = (token?: string) => {
     try {
       if (!token) return navLogin();
 
+      console.log('Query User Info');
+
       const [info, authKeys] = await Promise.all([queryUserInfo(), queryUserAuth()]);
 
       if (!info) return navLogin();
