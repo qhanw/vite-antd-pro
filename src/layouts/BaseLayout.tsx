@@ -1,5 +1,15 @@
-import { useState } from 'react';
-import { Outlet, Link, useLocation, useLoaderData, redirect } from 'react-router-dom';
+import { Suspense, useEffect, useState } from 'react';
+import {
+  Outlet,
+  Link,
+  Await,
+  useNavigate,
+  useLocation,
+  useLoaderData,
+  useAsyncValue,
+  redirect,
+  defer,
+} from 'react-router-dom';
 import {
   InfoCircleFilled,
   QuestionCircleFilled,
@@ -8,12 +18,14 @@ import {
 } from '@ant-design/icons';
 
 import { Input, Dropdown, theme } from 'antd';
-import { ProLayout } from '@ant-design/pro-components';
+import { ProLayout, PageLoading } from '@ant-design/pro-components';
+
+import ErrorElement from '@/pages/exception/ErrorElement';
 
 import defaultProps from '@/../config/site.cfg';
 import { menus } from '@/../config/menus';
 
-import { getToken } from '@/utils/store';
+import { getToken, setUserInfo, setAuthKeys } from '@/utils/store';
 import { useSignOut } from '@/services/hooks/sign';
 
 import { queryUserInfo, queryUserAuth, UserInfo } from '@/services/users';
@@ -22,11 +34,7 @@ const SearchInput = () => {
   const { token } = theme.useToken();
   return (
     <Input
-      style={{
-        borderRadius: 4,
-        marginInlineEnd: 12,
-        backgroundColor: token.colorBgTextHover,
-      }}
+      style={{ borderRadius: 4, marginInlineEnd: 12, backgroundColor: token.colorBgTextHover }}
       prefix={<SearchOutlined style={{ color: token.colorTextLightSolid }} />}
       placeholder="搜索方案"
       variant="borderless"
@@ -34,13 +42,17 @@ const SearchInput = () => {
   );
 };
 
-export default function BaseLayout() {
+const Layout = () => {
   const signOut = useSignOut();
-
+  const navigate = useNavigate();
   const location = useLocation();
-  const { info } = useLoaderData() as { info: UserInfo };
+  const [info] = useAsyncValue() as [UserInfo, string[]];
 
   const [pathname, setPathname] = useState(location.pathname || '/');
+
+  useEffect(() => {
+    if (!info) navigate('/login');
+  }, [info, navigate]);
 
   return (
     <ProLayout
@@ -79,7 +91,12 @@ export default function BaseLayout() {
             <Dropdown
               menu={{
                 items: [
-                  { key: 'logout', icon: <LogoutOutlined />, label: '退出登录', onClick: signOut },
+                  {
+                    key: 'logout',
+                    icon: <LogoutOutlined />,
+                    label: '退出登录',
+                    onClick: signOut,
+                  },
                 ],
               }}
             >
@@ -105,6 +122,15 @@ export default function BaseLayout() {
       <Outlet />
     </ProLayout>
   );
+};
+
+export default function BaseLayout() {
+  const { data } = useLoaderData() as { data: [UserInfo, string[]] };
+  return (
+    <Suspense fallback={<PageLoading />}>
+      <Await resolve={data} errorElement={<ErrorElement />} children={<Layout />} />
+    </Suspense>
+  );
 }
 
 export async function loader() {
@@ -112,20 +138,16 @@ export async function loader() {
   const token = getToken();
   if (!token) return navLogin();
 
-  try {
-    console.log('Query User Info');
-    const [info, authKeys] = await Promise.all([queryUserInfo(), queryUserAuth()]);
+  // console.log('Query User Info');
+  // 在此处设置本地需要存储的用户信息
+  const data = Promise.all([queryUserInfo(), queryUserAuth()]).then((res) => {
+    const [info, authKeys] = res;
 
-    if (!info) return navLogin();
-    // 存储到本地
-    // setAuthKeys(authKeys);
-    // setUserInfo(info);
+    if (authKeys) setAuthKeys(authKeys);
+    if (info) setUserInfo(info as any);
 
-    // // 返回用户信息
-    // setData(info);
+    return [info, authKeys];
+  });
 
-    return { info, authKeys };
-  } catch (error) {
-    return navLogin();
-  }
+  return defer({ data });
 }

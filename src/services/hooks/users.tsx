@@ -1,6 +1,6 @@
 import { queryUserInfo, queryUserAuth } from '@/services/users';
 
-import { useUserInfo, useAuthKeys } from '@/utils/store';
+import { setUserInfo, setAuthKeys } from '@/utils/store';
 import { useLayoutEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,8 +8,6 @@ export const useInitUserInfo = (token?: string) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any>();
-  const { set: setUserInfo } = useUserInfo();
-  const { set: setAuthKeys } = useAuthKeys();
 
   const navLogin = () => {
     setLoading(false);
@@ -28,7 +26,7 @@ export const useInitUserInfo = (token?: string) => {
       if (!info) return navLogin();
       // 存储到本地
       setAuthKeys(authKeys);
-      setUserInfo(info);
+      setUserInfo(info as any);
 
       // 返回用户信息
       setData(info);

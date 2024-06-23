@@ -3,12 +3,10 @@ import { message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { signIn, signOut, SignIn } from '@/services/sign';
 
-import store, { useToken } from '@/utils/store';
+import store, { setToken } from '@/utils/store';
 
 /** user login */
 export const useSignIn = () => {
-  const { set: setToken } = useToken();
-
   const navigate = useNavigate();
 
   const [userLoginState, setUserLoginState] = useState<SignIn>();

@@ -10,8 +10,8 @@ export type UserInfo = {
   createTime: string;
 };
 
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+function sleep(ms: number, bool?: boolean) {
+  return new Promise((resolve, reject) => setTimeout(bool ? resolve : reject, ms));
 }
 
 /** 获取用户信息 */
@@ -21,9 +21,7 @@ export async function queryUserInfo() {
   const token = getToken();
   const name = token.replace('token-', '');
 
-  // return Promise.reject('error!!!');
-
-  return sleep(2000).then(() => ({
+  return sleep(2000, true).then(() => ({
     id: 1,
     name: name,
     password: 'e10adc3949ba59abbe56e057f20f883e',
