@@ -26,7 +26,7 @@ declare namespace API {
     }
 
     // 分页数据类型
-    type ResPagination<T> = { lists: T[], current: number, pageSize: number, total: number }
+    type ResPagination<T> = { list: T[], current: number, pageSize: number, total: number }
 
     type EnumItem = { label: string, value: string | number, [propName: string]: string | number }
 

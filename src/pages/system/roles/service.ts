@@ -1,18 +1,19 @@
 import request from '@/utils/request';
 import type { ResRoles, QsRoles, RoleItem, AuthItem } from './typings';
 
-export async function fetchSysRoles(params?: QsRoles) {
-  return request<ResRoles>('/api/sys/role/list', { params });
+export async function fetchRoles(params?: QsRoles) {
+  return request<ResRoles>('/api/admin/role', { params });
 }
 
 /** 新增编辑角色 */
 export async function mutateRole(data: RoleItem) {
-  return request('/api/sys/role/mutate', { method: 'post', data });
+  const mode = data?.id ? 'edit' : 'add';
+  return request(`/api/admin/role/${mode}`, { method: 'post', data });
 }
 
 /** 删除角色 */
 export async function delRole(id: string | number) {
-  return request<API.ResEnum>(`/api/sys/role/${id}`, { method: 'delete' });
+  return request<API.ResEnum>(`/api/admin/role/${id}`, { method: 'delete' });
 }
 
 // 分配权限

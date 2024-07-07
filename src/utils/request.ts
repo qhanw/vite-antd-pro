@@ -5,7 +5,7 @@ import store from '@/utils/store';
 
 const instance = axios.create({
   // baseURL: 'http://10.80.10.95:9001',
-  timeout: 1000,
+  // timeout: 1000,
 });
 
 const CODE_MESSAGE: any = {
@@ -58,7 +58,9 @@ export default async function <T>(
     ...options,
   }).catch(errorHandler);
 
-  if (result?.status === 200) {
+  const httpStatus = result?.status;
+
+  if (httpStatus && httpStatus >= 200 && httpStatus < 300) {
     const model = result.data;
     if (model.code === 200) return model.data;
 

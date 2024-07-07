@@ -1,4 +1,4 @@
-import { Modal, Form, Input, Radio, message } from 'antd';
+import { Modal, Form, Input, message } from 'antd';
 import { useState, useImperativeHandle, forwardRef } from 'react';
 import { useRequest } from 'ahooks';
 import { mutateRole } from './service';
@@ -39,7 +39,7 @@ const MutateAdmin = forwardRef<MutateType, MutateProps>(({ finish }, ref) => {
     open: (val) => {
       form.resetFields();
       if (val) form.setFieldsValue(val);
-      setInInitVal(val || { id: 0, enable: true });
+      setInInitVal(val || { id: 0 });
     },
   }));
 
@@ -59,22 +59,13 @@ const MutateAdmin = forwardRef<MutateType, MutateProps>(({ finish }, ref) => {
       onCancel={onCancel}
       confirmLoading={loading}
     >
-      <Form form={form} {...formItemLayout} initialValues={{ enable: true }}>
+      <Form form={form} {...formItemLayout}>
         <Form.Item
           label="角色名称"
           name="name"
           rules={[{ required: true, message: '请输入角色名称！' }]}
         >
           <Input placeholder="角色名称" />
-        </Form.Item>
-
-        <Form.Item label="是否可用" name="enable">
-          <Radio.Group
-            options={[
-              { label: '是', value: true },
-              { label: '否', value: false },
-            ]}
-          />
         </Form.Item>
 
         <Form.Item label="备注" name="remark">
