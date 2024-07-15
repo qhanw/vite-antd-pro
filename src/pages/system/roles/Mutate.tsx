@@ -1,24 +1,24 @@
-import { Modal, Form, Input, message } from 'antd';
+import { Modal, Form, Input, TreeSelect, message } from 'antd';
 import { useState, useImperativeHandle, forwardRef } from 'react';
 import { useRequest } from 'ahooks';
 import { mutateRole } from './service';
-import { RoleItem } from './typings';
+import type { RoleItem } from './typings';
 
 type RefMethods = { open: (val?: RoleItem) => void };
 export type MutateType = RefMethods | undefined;
 
-type MutateProps = { finish?: () => void };
+type MutateProps = { finish?: () => void; roleList?: RoleItem[] };
 
 const formItemLayout = { labelCol: { span: 5 }, wrapperCol: { span: 19 } };
 
-const MutateAdmin = forwardRef<MutateType, MutateProps>(({ finish }, ref) => {
+const MutateAdmin = forwardRef<MutateType, MutateProps>(({ finish, roleList }, ref) => {
   const [form] = Form.useForm();
 
   // 设置一个值用于编辑或新增的表单初始数据，并用于控制窗口显示与隐藏
   const [initVal, setInInitVal] = useState<RoleItem>();
 
   const isAdd = !initVal?.id;
-  const titlePrefix = initVal?.id ? '更新' : '新增';
+  const titlePrefix = initVal?.id ? '编辑' : '新增';
 
   const { runAsync, loading } = useRequest(async (d) => mutateRole(d), {
     manual: true,
@@ -39,7 +39,7 @@ const MutateAdmin = forwardRef<MutateType, MutateProps>(({ finish }, ref) => {
     open: (val) => {
       form.resetFields();
       if (val) form.setFieldsValue(val);
-      setInInitVal(val || { id: 0 });
+      setInInitVal(val || {});
     },
   }));
 
@@ -66,6 +66,16 @@ const MutateAdmin = forwardRef<MutateType, MutateProps>(({ finish }, ref) => {
           rules={[{ required: true, message: '请输入角色名称！' }]}
         >
           <Input placeholder="角色名称" />
+        </Form.Item>
+
+        <Form.Item label="父级角色" name="pid">
+          <TreeSelect
+            placeholder="父级角色"
+            disabled={!initVal?.id && !!initVal?.pid}
+            treeData={roleList}
+            fieldNames={{ label: 'name', value: 'id' }}
+            allowClear
+          />
         </Form.Item>
 
         <Form.Item label="备注" name="remark">

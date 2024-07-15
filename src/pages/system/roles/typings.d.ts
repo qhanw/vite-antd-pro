@@ -1,5 +1,6 @@
 export type RoleItem = {
-  id: string | number;
+  id?: string;
+  pid?: string;
   name?: string;
   remark?: string;
 };

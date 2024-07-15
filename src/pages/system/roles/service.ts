@@ -1,8 +1,8 @@
 import request from '@/utils/request';
-import type { ResRoles, QsRoles, RoleItem, AuthItem } from './typings';
+import type { QsRoles, RoleItem, AuthItem } from './typings';
 
 export async function fetchRoles(params?: QsRoles) {
-  return request<ResRoles>('/api/admin/role', { params });
+  return request<RoleItem[]>('/api/admin/role', { params });
 }
 
 /** 新增编辑角色 */
@@ -17,7 +17,6 @@ export async function delRole(id: string | number) {
 }
 
 // 分配权限
-
 /** 获取全量权限 */
 export async function queryAllAuthList() {
   return request<AuthItem[]>('/api/sys/menu/enum');

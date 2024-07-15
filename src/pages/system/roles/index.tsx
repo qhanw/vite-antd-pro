@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
-import { Button } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { Button, Tooltip } from 'antd';
+import { PlusOutlined, EditOutlined, SettingOutlined } from '@ant-design/icons';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 
@@ -16,6 +16,8 @@ import type { MutateType } from './Mutate';
 export default function Roles() {
   const [role, setRole] = useState<RoleItem>();
 
+  const [roleList, setRoleList] = useState<RoleItem[]>();
+
   const actionRef = useRef<ActionType>();
   const mutateRef = useRef<MutateType>();
 
@@ -25,23 +27,34 @@ export default function Roles() {
     {
       title: '操作',
       valueType: 'option',
-      width: 144,
+      width: 180,
       render: (_, record) =>
         [
-          <a key="auth" onClick={() => setRole?.(record)}>
-            权限分配
-          </a>,
-          <a key="edit" onClick={() => mutateRef.current?.open(record)}>
-            编辑
-          </a>,
+          <Tooltip title="新增" key="add">
+            <Button
+              size="small"
+              icon={<PlusOutlined />}
+              onClick={() => mutateRef.current?.open({ pid: record.id })}
+            />
+          </Tooltip>,
+          <Tooltip title="编辑" key="edit">
+            <Button
+              size="small"
+              icon={<EditOutlined />}
+              onClick={() => mutateRef.current?.open(record)}
+            />
+          </Tooltip>,
+          <Tooltip title="权限分配" key="auth">
+            <Button size="small" icon={<SettingOutlined />} onClick={() => setRole?.(record)} />
+          </Tooltip>,
         ].concat(
           record.id !== 'root'
             ? [
                 <DelLinkBtn
-                  key="del"
                   id={record.id}
                   fn={delRole}
                   finish={() => actionRef.current?.reload()}
+                  icon
                 />,
               ]
             : [],
@@ -59,10 +72,12 @@ export default function Roles() {
         pagination={false}
         search={false}
         columns={columns}
-        request={async (params, sort) => {
-          const { list, total } = (await fetchRoles({ ...params, sort })) || {};
+        request={async () => {
+          const data = await fetchRoles();
 
-          return { data: list, success: !!list?.length, total };
+          setRoleList(data || []);
+
+          return { data, success: true, total: data?.length };
         }}
         toolBarRender={() => [
           <Button
@@ -71,11 +86,11 @@ export default function Roles() {
             onClick={() => mutateRef.current?.open()}
             type="primary"
           >
-            新建
+            新增
           </Button>,
         ]}
       />
-      <Mutate ref={mutateRef} finish={() => actionRef.current?.reload()} />
+      <Mutate roleList={roleList} ref={mutateRef} finish={() => actionRef.current?.reload()} />
 
       <AssignAuth role={role} onClose={() => setRole(undefined)} />
     </PageContainer>
