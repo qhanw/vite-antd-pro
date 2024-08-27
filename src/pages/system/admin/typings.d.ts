@@ -1,5 +1,5 @@
 export type AdminItem = {
-  id: string | number;
+  id?: string;
   roleId?: string;
   name?: string;
   enable?: boolean;

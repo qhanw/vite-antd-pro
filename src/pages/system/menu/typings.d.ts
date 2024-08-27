@@ -1,5 +1,5 @@
 export type MenuItem = {
-  id: string | number;
+  id?: string;
   pid?: string;
   name?: string;
   enable?: boolean;

@@ -85,7 +85,7 @@ export default function Admin() {
           const data = await fetchSysAdmin({ ...params, sort });
 
           return {
-            data: data?.lists || [],
+            data: data?.list || [],
             success: !!data,
             total: data?.total || 0,
           };

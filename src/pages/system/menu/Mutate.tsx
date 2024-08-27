@@ -38,7 +38,7 @@ const MutateAdmin = forwardRef<MutateType, MutateProps>(({ finish }, ref) => {
     open: (val) => {
       form.resetFields();
       if (val) form.setFieldsValue(val);
-      setInInitVal(val || { id: 0, enable: true });
+      setInInitVal(val || { enable: true });
     },
   }));
 
