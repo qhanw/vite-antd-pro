@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 // @ts-nocheck
 
 import type { RequestOptions } from '@@/plugin-request/request';

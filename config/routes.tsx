@@ -1,10 +1,14 @@
-import React, { lazy } from 'react';
+import React, { Suspense, lazy } from 'react';
+import { Spin } from 'antd';
 import { Outlet, Navigate } from 'react-router-dom';
-import base, { Route } from './base';
+import type { Route } from './base';
+import base from './base';
 import { access } from './access';
 import { getFullPath } from './utils';
 
-const lazyLoad = (src: any) => <>{React.createElement(lazy(src))}</>;
+const lazyLoad = (src: any) => (
+  <Suspense fallback={<Spin spinning />}>{React.createElement(lazy(src))}</Suspense>
+);
 
 // 动态路由配置
 const pages = import.meta.glob([

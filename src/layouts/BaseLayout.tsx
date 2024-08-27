@@ -28,7 +28,8 @@ import { menus } from '@/../config/menus';
 import { getToken, setUserInfo, setAuthKeys } from '@/utils/store';
 import { useSignOut } from '@/services/hooks/sign';
 
-import { queryUserInfo, queryUserAuth, UserInfo } from '@/services/users';
+import type { UserInfo } from '@/services/users';
+import { queryUserInfo, queryUserAuth } from '@/services/users';
 
 const SearchInput = () => {
   const { token } = theme.useToken();

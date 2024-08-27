@@ -32,7 +32,7 @@ export const useInitUserInfo = (token?: string) => {
       setData(info);
 
       setLoading(false);
-    } catch (error) {
+    } catch {
       navLogin();
     }
   }, []);

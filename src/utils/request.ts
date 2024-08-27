@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { AxiosRequestConfig, AxiosError } from 'axios';
+import type { AxiosRequestConfig, AxiosError } from 'axios';
 import { message, notification } from 'antd';
 import store from '@/utils/store';
 

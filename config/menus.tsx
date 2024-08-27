@@ -1,4 +1,5 @@
-import base, { Route } from './base';
+import type { Route } from './base';
+import base from './base';
 import { access } from './access';
 import { getFullPath } from './utils';
 

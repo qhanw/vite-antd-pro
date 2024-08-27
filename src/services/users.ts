@@ -21,7 +21,9 @@ export async function queryUserInfo() {
   const token = getToken();
   const name = token.replace('token-', '');
 
-  return sleep(2000, true).then(() => ({
+  const remainder = Math.round(Math.random() * 10) % 2;
+
+  return sleep(2000, !remainder).then(() => ({
     id: 1,
     name: name,
     password: 'e10adc3949ba59abbe56e057f20f883e',

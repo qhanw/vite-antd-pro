@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { message } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { signIn, signOut, SignIn } from '@/services/sign';
+import type { SignIn } from '@/services/sign';
+import { signIn, signOut } from '@/services/sign';
 
 import store, { setToken } from '@/utils/store';
 

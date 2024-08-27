@@ -1,4 +1,4 @@
-import { ProLayoutProps } from '@ant-design/pro-components';
+import type { ProLayoutProps } from '@ant-design/pro-components';
 
 const cfg: ProLayoutProps = {
   title: 'Vite Antd Pro',

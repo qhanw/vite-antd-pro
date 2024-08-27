@@ -2,7 +2,7 @@ import { Modal, Form, Input, Radio, message, Select } from 'antd';
 import { useState, useImperativeHandle, forwardRef } from 'react';
 import { useRequest } from 'ahooks';
 import { mutateMenu } from './service';
-import { MenuItem } from './typings';
+import type { MenuItem } from './typings';
 
 type RefMethods = { open: (val?: MenuItem) => void };
 export type MutateType = RefMethods | undefined;

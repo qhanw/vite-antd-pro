@@ -2,7 +2,7 @@ import { Modal, Form, Input, Radio, Select, Alert, message } from 'antd';
 import { useState, useImperativeHandle, forwardRef } from 'react';
 import { useRequest } from 'ahooks';
 import { mutateAdmin } from './service';
-import { AdminItem } from './typings';
+import type { AdminItem } from './typings';
 
 type RefMethods = { open: (val?: AdminItem) => void };
 export type MutateType = RefMethods | undefined;
