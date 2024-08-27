@@ -1,14 +1,16 @@
-import React, { Suspense, lazy } from 'react';
-import { Spin } from 'antd';
+// import React, { Suspense, lazy } from 'react';
+// import { Spin } from 'antd';
 import { Outlet, Navigate } from 'react-router-dom';
 import type { Route } from './base';
 import base from './base';
 import { access } from './access';
 import { getFullPath } from './utils';
 
-const lazyLoad = (src: any) => (
-  <Suspense fallback={<Spin spinning />}>{React.createElement(lazy(src))}</Suspense>
-);
+import ErrorBoundary from '@/pages/exception/ErrorBoundary';
+
+// const lazyLoad = (src: any) => (
+//   <Suspense fallback={<Spin spinning />}>{React.createElement(lazy(src))}</Suspense>
+// );
 
 // 动态路由配置
 const pages = import.meta.glob([
@@ -58,7 +60,7 @@ const genRoutes = function f(r: Route[], parent?: Route): any {
     const fullPath = getFullPath(curr, parent?.path);
 
     return {
-      errorElement: lazyLoad(metaPages[exception.ErrorBoundary]),
+      errorElement: <ErrorBoundary />, // lazyLoad(metaPages[exception.ErrorBoundary]),
 
       ...(isEmptyContainer
         ? { element: <Outlet /> }
