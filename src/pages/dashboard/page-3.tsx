@@ -1,4 +1,4 @@
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData } from 'react-router';
 import type { UserInfo } from '@/services/users';
 
 export default () => {

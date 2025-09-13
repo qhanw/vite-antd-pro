@@ -1,11 +1,12 @@
 // import React, { Suspense, lazy } from 'react';
 // import { Spin } from 'antd';
-import { Outlet, Navigate } from 'react-router-dom';
+import { Outlet, Navigate } from 'react-router';
 import type { Route } from './base';
 import base from './base';
 import { access } from './access';
 import { getFullPath } from './utils';
 
+import { PageLoading } from '@ant-design/pro-components';
 import ErrorBoundary from '@/pages/exception/ErrorBoundary';
 
 // const lazyLoad = (src: any) => (
@@ -91,6 +92,7 @@ const genRoutes = function f(r: Route[], parent?: Route): any {
       ...(index ? { index } : { path }),
       ...(redirect ? { element: <Navigate to={redirect} replace /> } : {}),
       ...(children ? { children: f(children, fullPath) } : {}),
+      HydrateFallback: PageLoading,
     };
   });
 };

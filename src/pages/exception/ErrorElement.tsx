@@ -1,4 +1,4 @@
-import { useAsyncError } from 'react-router-dom';
+import { useAsyncError } from 'react-router';
 import { Result } from 'antd';
 
 export default function ErrorElement() {

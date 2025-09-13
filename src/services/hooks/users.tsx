@@ -2,7 +2,7 @@ import { queryUserInfo, queryUserAuth } from '@/services/users';
 
 import { setUserInfo, setAuthKeys } from '@/utils/store';
 import { useLayoutEffect, useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 export const useInitUserInfo = (token?: string) => {
   const navigate = useNavigate();

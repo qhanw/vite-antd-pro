@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { message } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import type { SignIn } from '@/services/sign';
 import { signIn, signOut } from '@/services/sign';
 

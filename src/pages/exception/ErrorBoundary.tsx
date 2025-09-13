@@ -1,4 +1,4 @@
-import { useNavigate, useRouteError, isRouteErrorResponse } from 'react-router-dom';
+import { useNavigate, useRouteError, isRouteErrorResponse } from 'react-router';
 import { Button, Result } from 'antd';
 
 import Exception403 from './403';

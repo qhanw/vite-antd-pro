@@ -8,8 +8,7 @@ import {
   useLoaderData,
   useAsyncValue,
   redirect,
-  defer,
-} from 'react-router-dom';
+} from 'react-router';
 import {
   InfoCircleFilled,
   QuestionCircleFilled,
@@ -127,6 +126,7 @@ const Layout = () => {
 
 export default function BaseLayout() {
   const { data } = useLoaderData() as { data: [UserInfo, string[]] };
+
   return (
     <Suspense fallback={<PageLoading />}>
       <Await resolve={data} errorElement={<ErrorElement />} children={<Layout />} />
@@ -150,5 +150,5 @@ export async function loader() {
     return [info, authKeys];
   });
 
-  return defer({ data });
+  return { data };
 }

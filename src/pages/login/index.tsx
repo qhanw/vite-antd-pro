@@ -8,7 +8,7 @@ const LoginMessage: React.FC<{ content: string }> = ({ content }) => {
   return <Alert style={{ marginBottom: 24 }} message={content} type="error" showIcon />;
 };
 
-export default () => {
+export default function Login() {
   const { userLoginState, signIn } = useSignIn();
 
   const onSubmit = async (values: any) => {
@@ -36,4 +36,4 @@ export default () => {
       />
     </LoginForm>
   );
-};
+}
