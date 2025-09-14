@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Tree, Empty, Button, Drawer, Space, message } from 'antd';
 import type { TreeDataNode, TreeProps } from 'antd';
-import { useRequest } from 'ahooks';
+import { useQuery, useMutation } from '@tanstack/react-query';
 
 import { queryAllAuthList, queryRoleAuthList, bindRoleAuth } from './service';
 import type { RoleItem } from './typings';
@@ -66,36 +66,44 @@ export default function AssignAuth({ role, onClose }: AssignAuthProps) {
   };
 
   // 获取当前角色已绑定权限
-  const { run: submit, loading: confirmLoading } = useRequest(bindRoleAuth, {
-    manual: true,
+  const { mutate: submit, isPending: confirmLoading } = useMutation({
+    mutationFn: bindRoleAuth,
     onSuccess: () => message.success('权限分配成功！'),
   });
 
   // 获取权限树数据
-  const { data: { authList, allExKey } = initVal } = useRequest(
-    async () => {
+  const { data: { authList, allExKey } = initVal } = useQuery({
+    queryKey: ['allAuthList'],
+    queryFn: async () => {
       const res = await queryAllAuthList();
       const allExKey = findParentKeys(res as TreeDataNode[]);
 
+      //  初始化展开整棵树
+      setExpandedKeys(allExKey);
+
       return { authList: res, allExKey };
     },
-    {
-      ready: !!role,
-      onSuccess: (d) => {
-        //  初始化展开整棵树
-        setExpandedKeys(d.allExKey);
-      },
-    },
-  );
+    // 只有当role存在时才执行
+    enabled: !!role,
+  });
 
-  const { run: fetch } = useRequest(queryRoleAuthList, {
-    manual: true,
+  const { mutate: fetch } = useMutation({
+    mutationFn: queryRoleAuthList, // 请求函数
     onSuccess: (d) => {
       const showAuth = d?.filter((c) => findNodeKey(authList as any, c));
       setCheckedKeys(showAuth as AuthKeys);
       setAuthKeys(d as AuthKeys);
     },
   });
+
+  // const { run: fetch } = useRequest(queryRoleAuthList, {
+  //   manual: true,
+  //   onSuccess: (d) => {
+  //     const showAuth = d?.filter((c) => findNodeKey(authList as any, c));
+  //     setCheckedKeys(showAuth as AuthKeys);
+  //     setAuthKeys(d as AuthKeys);
+  //   },
+  // });
 
   useEffect(() => {
     if (roleId && authList?.length) fetch(roleId);
@@ -119,7 +127,7 @@ export default function AssignAuth({ role, onClose }: AssignAuthProps) {
           <Button
             loading={confirmLoading}
             type="primary"
-            onClick={() => submit(roleId!, authKeys as string[])}
+            onClick={() => submit({ id: roleId!, auths: authKeys as string[] })}
           >
             确定
           </Button>

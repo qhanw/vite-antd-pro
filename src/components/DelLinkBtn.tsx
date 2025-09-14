@@ -1,6 +1,6 @@
 import { LoadingOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Spin, message, Typography, Button, Tooltip } from 'antd';
-import { useRequest } from 'ahooks';
+import { useMutation } from '@tanstack/react-query';
 
 type DelLinkBtnProps = {
   id?: string;
@@ -11,8 +11,8 @@ type DelLinkBtnProps = {
 };
 
 const DelLinkBtn = ({ id, fn, finish, text = '删除', icon }: DelLinkBtnProps) => {
-  const { run, loading } = useRequest(fn, {
-    manual: true,
+  const { mutate, isPending } = useMutation({
+    mutationFn: fn,
     onSuccess: () => {
       message.success('删除成功！');
       finish?.();
@@ -24,11 +24,11 @@ const DelLinkBtn = ({ id, fn, finish, text = '删除', icon }: DelLinkBtnProps) 
 
   return icon ? (
     <Tooltip title={text}>
-      <Button size="small" icon={<DeleteOutlined />} onClick={() => run(id)} danger />
+      <Button size="small" icon={<DeleteOutlined />} onClick={() => mutate(id)} danger />
     </Tooltip>
   ) : (
-    <Spin delay={200} spinning={loading} size="small" indicator={<LoadingOutlined />}>
-      <Typography.Link type="danger" onClick={() => run(id)}>
+    <Spin delay={200} spinning={isPending} size="small" indicator={<LoadingOutlined />}>
+      <Typography.Link type="danger" onClick={() => mutate(id)}>
         {text}
       </Typography.Link>
     </Spin>

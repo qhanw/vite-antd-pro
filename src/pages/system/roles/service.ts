@@ -28,6 +28,6 @@ export async function queryRoleAuthList(id: string | number) {
 }
 
 /** 绑定角色权限*/
-export async function bindRoleAuth(id: string | number, data: string[]) {
-  return request(`/api/sys/role/${id}/auth`, { method: 'post', data: { auths: data } });
+export async function bindRoleAuth({ id, auths }: { id: string | number; auths: string[] }) {
+  return request(`/api/sys/role/${id}/auth`, { method: 'post', data: { auths } });
 }

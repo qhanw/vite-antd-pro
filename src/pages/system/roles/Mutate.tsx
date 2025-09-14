@@ -1,6 +1,6 @@
 import { Modal, Form, Input, TreeSelect, message } from 'antd';
 import { useState, useImperativeHandle, forwardRef } from 'react';
-import { useRequest } from 'ahooks';
+import { useMutation } from '@tanstack/react-query';
 import { mutateRole } from './service';
 import type { RoleItem } from './typings';
 
@@ -20,8 +20,8 @@ const MutateAdmin = forwardRef<MutateType, MutateProps>(({ finish, roleList }, r
   const isAdd = !initVal?.id;
   const titlePrefix = initVal?.id ? '编辑' : '新增';
 
-  const { runAsync, loading } = useRequest(async (d) => mutateRole(d), {
-    manual: true,
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: mutateRole,
     onSuccess: () => {
       message.success(`${titlePrefix}成功！`);
 
@@ -48,7 +48,7 @@ const MutateAdmin = forwardRef<MutateType, MutateProps>(({ finish, roleList }, r
   const onOk = async () => {
     const fieldsVal = await form.validateFields().catch(console.error);
     if (!fieldsVal) return;
-    await runAsync(isAdd ? fieldsVal : { ...fieldsVal, id: initVal?.id });
+    await mutateAsync(isAdd ? fieldsVal : { ...fieldsVal, id: initVal?.id });
   };
 
   return (
@@ -57,7 +57,7 @@ const MutateAdmin = forwardRef<MutateType, MutateProps>(({ finish, roleList }, r
       title={`${titlePrefix}角色`}
       onOk={onOk}
       onCancel={onCancel}
-      confirmLoading={loading}
+      confirmLoading={isPending}
     >
       <Form form={form} {...formItemLayout}>
         <Form.Item

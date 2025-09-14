@@ -1,6 +1,6 @@
 import { Modal, Form, Input, Radio, Select, Alert, message } from 'antd';
 import { useState, useImperativeHandle, forwardRef } from 'react';
-import { useRequest } from 'ahooks';
+import { useMutation } from '@tanstack/react-query';
 import { mutateAdmin } from './service';
 import type { AdminItem } from './typings';
 
@@ -23,8 +23,8 @@ const MutateAdmin = forwardRef<MutateType, MutateProps>(({ opts, finish }, ref) 
   const isAdd = !initVal?.id;
   const titlePrefix = initVal?.id ? '更新' : '新增';
 
-  const { runAsync, loading } = useRequest(async (d) => mutateAdmin(d), {
-    manual: true,
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: mutateAdmin,
     onSuccess: () => {
       message.success(`${titlePrefix}成功！`);
 
@@ -50,7 +50,7 @@ const MutateAdmin = forwardRef<MutateType, MutateProps>(({ opts, finish }, ref) 
   const onOk = async () => {
     const fieldsVal = await form.validateFields().catch(console.error);
     if (!fieldsVal) return;
-    await runAsync(isAdd ? fieldsVal : { ...fieldsVal, id: initVal?.id });
+    await mutateAsync(isAdd ? fieldsVal : { ...fieldsVal, id: initVal?.id });
   };
 
   return (
@@ -59,7 +59,7 @@ const MutateAdmin = forwardRef<MutateType, MutateProps>(({ opts, finish }, ref) 
       title={`${titlePrefix}管理员`}
       onOk={onOk}
       onCancel={onCancel}
-      confirmLoading={loading}
+      confirmLoading={isPending}
     >
       <Form form={form} {...formItemLayout} initialValues={{ enable: false }}>
         <Form.Item

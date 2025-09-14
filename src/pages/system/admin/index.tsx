@@ -3,7 +3,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable, PageContainer } from '@ant-design/pro-components';
 import { Button } from 'antd';
 import { useRef } from 'react';
-import { useRequest } from 'ahooks';
+import { useQuery } from '@tanstack/react-query';
 
 import DelLinkBtn from '@/components/DelLinkBtn';
 
@@ -17,7 +17,10 @@ export default function Admin() {
   const actionRef = useRef<ActionType>();
   const mutateRef = useRef<MutateType>();
 
-  const { data: roles } = useRequest(fetchRolesEnum);
+  const { data: roles } = useQuery({
+    queryKey: ['roles-enum'],
+    queryFn: fetchRolesEnum,
+  });
 
   const columns: ProColumns<AdminItem>[] = [
     { title: '管理员名称', dataIndex: 'name' },

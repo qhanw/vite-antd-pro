@@ -1,6 +1,6 @@
 import { Modal, Form, Input, Radio, message, Select } from 'antd';
 import { useState, useImperativeHandle, forwardRef } from 'react';
-import { useRequest } from 'ahooks';
+import { useMutation } from '@tanstack/react-query';
 import { mutateMenu } from './service';
 import type { MenuItem } from './typings';
 
@@ -20,8 +20,8 @@ const MutateAdmin = forwardRef<MutateType, MutateProps>(({ finish }, ref) => {
   const isAdd = !initVal?.id;
   const titlePrefix = initVal?.id ? '更新' : '新增';
 
-  const { runAsync, loading } = useRequest(async (d) => mutateMenu(d), {
-    manual: true,
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: mutateMenu,
     onSuccess: () => {
       message.success(`${titlePrefix}成功！`);
 
@@ -47,7 +47,7 @@ const MutateAdmin = forwardRef<MutateType, MutateProps>(({ finish }, ref) => {
   const onOk = async () => {
     const fieldsVal = await form.validateFields().catch(console.error);
     if (!fieldsVal) return;
-    await runAsync(isAdd ? fieldsVal : { ...fieldsVal, id: initVal?.id });
+    await mutateAsync(isAdd ? fieldsVal : { ...fieldsVal, id: initVal?.id });
   };
 
   return (
@@ -56,7 +56,7 @@ const MutateAdmin = forwardRef<MutateType, MutateProps>(({ finish }, ref) => {
       title={`${titlePrefix}菜单`}
       onOk={onOk}
       onCancel={onCancel}
-      confirmLoading={loading}
+      confirmLoading={isPending}
     >
       <Form form={form} {...formItemLayout} initialValues={{ enable: true }}>
         <Form.Item
